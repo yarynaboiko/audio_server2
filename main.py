@@ -21,7 +21,7 @@ app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Dependency
+# Dependency dfghjk bhjkghc
 def get_db():
     db = SessionLocal()
     try:
