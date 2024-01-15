@@ -83,22 +83,23 @@ async def create_upload_file(file: UploadFile):
         raise HTTPException(status_code = 400, detail = "Can't upload file")
 
 @app.post("/track")
-async def add_track(files: list[UploadFile], 
+async def add_track( 
                     artist: str = Form(), 
                     album: str = Form(),
                     title: str = Form(),
+                    audiofile: UploadFile = Form(),
                     db: Session = Depends(get_db)):
-    create_upload_file(files[0])
-    artist_db = crud.get_artist_by_name(artist)
+    create_upload_file(audiofile)
+    artist_db = crud.get_artist_by_name(db, artist)
     if artist_db: 
         artist_id = artist_db.id
     else:
         new_artist = crud.create_artist(db, artist = schemas.ArtistCreate(name=artist, bio=''))
         artist_id = new_artist.id
 
-    new_album = crud.create_album(db, album = schemas.AlbumCreate(title = album, year = 2024, artist_id = artist_id))
+    # new_album = crud.create_album(db, album = schemas.AlbumCreate(title = album, year = 2024, artist_id = artist_id))
 
-    return crud.create_track(db, track = schemas.TrackCreate(title = title, artist_id = artist_id, album_id = new_album.id, filename = files[0].filename))
+    # return crud.create_track(db, track = schemas.TrackCreate(title = title, artist_id = artist_id, album_id = new_album.id, filename = audiofile.filename))
 
 @app.get('/add_track')
 def add_track_page(request: Request):
